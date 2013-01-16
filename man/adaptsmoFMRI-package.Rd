@@ -25,10 +25,9 @@ Journal of Statistical Software, \bold{Volume 44}, Issue 6. 2011
 \tabular{ll}{
 Package: \tab adaptsmoFMRI\cr
 Type: \tab Package\cr
-Version: \tab 1.0\cr
-Date: \tab 2012-11-01\cr
+Version: \tab 1.1\cr
+Date: \tab 2013-01-16\cr
 License: \tab GPL-2\cr
-LazyLoad: \tab yes\cr
 }
 }
 \author{

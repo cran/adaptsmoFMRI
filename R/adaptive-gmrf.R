@@ -27,7 +27,7 @@
 #' @author Max Hughes
 #' @note This function is solely for one covariate and real data sets.
 #' @examples
-#' # see example at function for simulated data
+#' # See example function for simulated data (one covariate).       
 
 
 adaptiveGMRF <- function(data, hrf, approximate=FALSE, K=500, 

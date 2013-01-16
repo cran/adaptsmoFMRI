@@ -60,23 +60,7 @@
   This function is solely for two covariates.
 }
 \examples{
-# non-transformed hr-function
-T <- 180
-seq.length <- T*3
-index <- seq(3, T*3, by = 3)
-vis <- rep(c(-0.5, 0.5), each=30, times=ceiling(T/30*1.5))
-vis <- as.matrix(vis[index])
-aud <- rep(c(-0.5, 0.5), each=45, times=ceiling(T/30*1.5))
-aud <- as.matrix(aud[index])
-hrf <- cbind(vis,aud)
-# get simulated data
-data("sim_fmri_2covar")
-data <- data_simfmri2COVAR
-# execute function
-a <- b <- c <- d <- nu <- 1
-K <- 2
-test.sim.adaptive.2covar <- sim.adaptiveGMRF2COVAR(data, hrf, approximate=TRUE,
-                                                   K, a, b, c, d, nu)
+# See example function for simulated data (one covariate).
 }
 \author{
   Max Hughes

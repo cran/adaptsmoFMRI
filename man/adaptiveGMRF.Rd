@@ -64,7 +64,7 @@
   sets.
 }
 \examples{
-# see example at function for simulated data
+# See example function for simulated data (one covariate).
 }
 \author{
   Max Hughes

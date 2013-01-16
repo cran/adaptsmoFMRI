@@ -27,17 +27,18 @@
 #' @author Max Hughes
 #' @note This function is solely for two covariates and real data sets.
 #' @examples
-#' # see example at function for simulated data
+#' # See example function for simulated data (one covariate).       
 
 
 adaptiveGMRF2COVAR <- function(data, hrf, approximate=FALSE, K=500,
                                a=0.001, b=0.001, c=0.001, d=0.001, nu=1, filter=NULL, block=1, burnin=1, thin=1){
 
   ## load required libraries
-  require(coda)
-  require(mvtnorm)
-  require(MCMCpack)
-  require(Matrix)
+  require("coda")
+  require("mvtnorm")
+  require("MCMCpack")
+  require("Matrix")
+  require("parallel")
 
   #if (any(is.na(data)))
   #      stop("\nNAs in fMRI data.\n")
@@ -94,6 +95,7 @@ adaptiveGMRF2COVAR <- function(data, hrf, approximate=FALSE, K=500,
   I <- sum(!is.na(ymask))
   # use filter for fmri data
   y <- c()
+
   for(i in 1:dx){
     for(j in 1:dy){
       if(!is.na(ymask[i,j])){
@@ -139,10 +141,10 @@ adaptiveGMRF2COVAR <- function(data, hrf, approximate=FALSE, K=500,
 
   K.i <- c(1:I, nei[1,], nei[2,])
   K.j <- c(1:I, nei[2,], nei[1,])
-  tauk.sq2K <- array(0, dim=c(length(K.i), NEI))
+
   ## K matrix for first covariate
-  w.Var1 <- rep(0.32, NEI)
-  tauk.sq2K.Var1 <- array(0, dim=c(length(K.i), NEI))
+  w.Var1 <- rep(0.8, NEI)
+  tauk.sq2K.Var1 <- as(array(0, dim=c(length(K.i), NEI)), "sparseMatrix")
 
   for(i in 1:NEI){
     tauk.sq2K.Var1[nei[1, i], i] <- w.Var1[i]
@@ -151,14 +153,15 @@ adaptiveGMRF2COVAR <- function(data, hrf, approximate=FALSE, K=500,
     tauk.sq2K.Var1[I+NEI+i,i] <- -w.Var1[i]
   }   #image(as(tauk.sq2K.Var1, "sparseMatrix"))
 
+
   ## precision paramter for first covariate
   tauk.sq.Var1 <- rep(1, NEI)
   ## tauk.sq.Var1 togehter with tauk.sq.Var1
   K.sparse.Var1 <- sparseMatrix(K.i, K.j, x=as.vector(tauk.sq2K.Var1%*%tauk.sq.Var1), dims=c(I,I))
 
   ## K matrix for second covariate
-  w.Var2 <- rep(0.32, NEI)
-  tauk.sq2K.Var2 <- array(0, dim=c(length(K.i), NEI))
+  w.Var2 <- rep(0.8, NEI)
+  tauk.sq2K.Var2 <- as(array(0, dim=c(length(K.i), NEI)), "sparseMatrix")
 
   for(i in 1:NEI){
     tauk.sq2K.Var2[nei[1, i], i] <- w.Var2[i]
@@ -209,7 +212,7 @@ adaptiveGMRF2COVAR <- function(data, hrf, approximate=FALSE, K=500,
   ## save output of MCMC
   #alpha.out <-
   beta.Var1.out <- beta.Var2.out <- w.Var1.out <- w.Var2.out <- tauk.Var1.out <- tauk.Var2.out <- sigma.out <- c()
-
+  
   for(k in 1:K){
 
 
@@ -270,7 +273,6 @@ adaptiveGMRF2COVAR <- function(data, hrf, approximate=FALSE, K=500,
 
     ## Step 3: Draw the weights w_ij via MH steps or Gibbs-Sampling in the
     ##         approximate case
-
     if(approximate==TRUE){
       ## Update weights for first covariate
       f.full.Var1 <- nu/2
@@ -297,6 +299,7 @@ adaptiveGMRF2COVAR <- function(data, hrf, approximate=FALSE, K=500,
     }
     else{
       ## Update weights for first covariate
+      drawWeights.Var1 <- function(...){
       K.old.Var1 <- K.sparse.Var1
       f.full.Var1 <- nu/2
       for(i in 1:NEI){
@@ -315,7 +318,6 @@ adaptiveGMRF2COVAR <- function(data, hrf, approximate=FALSE, K=500,
           # update K.sparse with w.new and call it K.new
           K.new.Var1 <- sparseMatrix(K.i, K.j, x=as.vector(tauk.sq2K.Var1%*%(1/tauk.sq.Var1)),
                                 dims=c(I,I))
-
           # start the Cholesky decomposition in the row corresponding to the position
           # where a proposed new weight is located
           # delete last row and column
@@ -367,9 +369,10 @@ adaptiveGMRF2COVAR <- function(data, hrf, approximate=FALSE, K=500,
                                 dims=c(I,I))
 
           eigen.new.Var1 <- sum(log(diag(chol(K.new.Var1[K.i[I+1-block+i]:(I-1),
-                                   K.i[I+1-block+i]:(I-1)]))))
+                                    K.i[I+1-block+i]:(I-1)]))))
+
           eigen.old.Var1 <- sum(log(diag(chol(K.old.Var1[K.i[I+1-block+i]:(I-1),
-                                   K.i[I+1-block+i]:(I-1)]))))
+                                    K.i[I+1-block+i]:(I-1)]))))
 
           # avoid deviding by 0 and avoid having infinity in numerator and denominator!
           # (better set acc.rate to zero in infinity case?)
@@ -397,7 +400,11 @@ adaptiveGMRF2COVAR <- function(data, hrf, approximate=FALSE, K=500,
           }
         }
       }
+      return(list("w.Var1"=w.Var1, "tauk.sq2K.Var1"=tauk.sq2K.Var1,
+                  "count.Var1"=count.Var1, "acc.count.Var1"=acc.count.Var1))
+    }
       ## Update weights for second covariate
+      drawWeights.Var2 <- function(...){
       K.old.Var2 <- K.sparse.Var2
       f.full.Var2 <- nu/2
       for(i in 1:NEI){
@@ -468,9 +475,10 @@ adaptiveGMRF2COVAR <- function(data, hrf, approximate=FALSE, K=500,
                                 dims=c(I,I))
 
           eigen.new.Var2 <- sum(log(diag(chol(K.new.Var2[K.i[I+1-block+i]:(I-1),
-                                   K.i[I+1-block+i]:(I-1)]))))
+                                    K.i[I+1-block+i]:(I-1)]))))
+
           eigen.old.Var2 <- sum(log(diag(chol(K.old.Var2[K.i[I+1-block+i]:(I-1),
-                                   K.i[I+1-block+i]:(I-1)]))))
+                                    K.i[I+1-block+i]:(I-1)]))))
 
           # avoid deviding by 0 and avoid having infinity in numerator and denominator!
           # (better set acc.rate to zero in infinity case?)
@@ -498,6 +506,22 @@ adaptiveGMRF2COVAR <- function(data, hrf, approximate=FALSE, K=500,
           }
         }
       }
+      return(list("w.Var2"=w.Var2, "tauk.sq2K.Var2"=tauk.sq2K.Var2,
+                  "count.Var2"=count.Var2, "acc.count.Var2"=acc.count.Var2))
+    }
+      weights.Var1 <- mcparallel(drawWeights.Var1(K.sparse.Var1, nu, nei, NEI, I, block, count.Var1, beta.Var1, tauk.sq.Var1, tauk.sq2K.Var1, K.i, K.j), name="Var1")
+      weights.Var2 <- mcparallel(drawWeights.Var2(K.sparse.Var2, nu, nei, NEI, I, block, count.Var2, beta.Var2, tauk.sq.Var2, tauk.sq2K.Var2, K.i, K.j), name="Var2")
+      results <- mccollect(list("Var1"=weights.Var1, "Var2"=weights.Var2))
+      
+      w.Var1 <- results$Var1$w.Var1
+      tauk.sq2K.Var1 <- results$Var1$tauk.sq2K.Var1
+      count.Var1 <- results$Var1$count.Var1
+      acc.count.Var1 <- results$Var1$acc.count.Var1
+      
+      w.Var2 <- results$Var2$w.Var2
+      tauk.sq2K.Var2 <- results$Var2$tauk.sq2K.Var2
+      count.Var2 <- results$Var2$count.Var2
+      acc.count.Var2 <- results$Var2$acc.count.Var2
     }
 
     ## Step 4: Draw the variance parameters sigma^2 and the hyperparameters from its

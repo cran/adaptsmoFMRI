@@ -1,8 +1,8 @@
 Package: adaptsmoFMRI
 Type: Package
 Title: Adaptive Smoothing of FMRI Data
-Version: 1.0
-Date: 2012-11-01
+Version: 1.1
+Date: 2013-01-16
 Author: Max Hughes
 Maintainer: Max Hughes <hughesgm@me.com>
 Description: This package contains R functions for estimating the blood
@@ -12,12 +12,12 @@ Description: This package contains R functions for estimating the blood
         implemented simulations make use of efficient Markov Chain
         Monte Carlo methods.
 License: GPL-2
-Lazyload: yes
-Depends: R(>= 2.15.1), Matrix, coda, mvtnorm, MCMCpack, spatstat
+Depends: R(>= 2.15.2), Matrix, coda, mvtnorm, MCMCpack, spatstat,
+        parallel
 Collate: 'adaptive-gmrf-2covar.R' 'adaptive-gmrf.R'
         'plot-weights-real.R' 'plot-weights-sim.R'
         'sim-adaptive-gmrf-2covar.R' 'sim-adaptive-gmrf.R'
         'sim-fmri-2covar.R' 'sim-fmri.R'
-Packaged: 2012-11-09 14:02:45 UTC; gordonmax
+Packaged: 2013-01-19 13:12:15 UTC; gordonmax
 Repository: CRAN
-Date/Publication: 2012-11-09 18:00:46
+Date/Publication: 2013-01-19 16:27:49
