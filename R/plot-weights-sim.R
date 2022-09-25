@@ -14,13 +14,12 @@
 #'        this threshold should be plotted.
 #' @param \dots graphical parameters for \code{image} can also be passed on as arguments to 
 #'       this function. 
-#' @author Max Hughes
+#' @author Maximilian Hughes
 #' @note This function is solely for MCMC-outputs on simulated data.
+#' @import spatstat.geom
 
 
-sim.weightsplot <- function(weights, nei, nx, ny, thresh=0.05, ...) { 
-
-  require(spatstat)
+sim.weightsplot <- function(weights, nei, nx, ny, thresh=0.05, ...) {
 
   #if(class(model)!="adpatsmoFMRI")
   #  stop("Inserted model needs to be of class spatsmoFMRI.")
@@ -55,7 +54,7 @@ sim.weightsplot <- function(weights, nei, nx, ny, thresh=0.05, ...) {
   ncolim <- 2*ncol - 1
 
   Z <- matrix(nrow=nrowim, ncol=ncolim)
-  Zim <- im(Z, xcol=1:ncolim, yrow=1:nrowim)
+  Zim <- spatstat.geom::im(Z, xcol=1:ncolim, yrow=1:nrowim)
 
   inds <- rep(seq(1,ncolim,by=2), times=nrow) + rep((0:(nrow-1))*(2*ncolim), each=ncol)
 

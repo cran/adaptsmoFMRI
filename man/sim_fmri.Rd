@@ -5,3 +5,4 @@
 \description{The data set contains a synthetic spatiotemporal data set, hence a 
 simulated data set. The data set is an array of dimension 20 x 20 x 210.}
 \note{This data set was created while inserting one covariate.}
+\value{No return value, called for side effects} 

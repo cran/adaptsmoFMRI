@@ -33,7 +33,10 @@ beta <- 3
 # use function to obtain fmri data
 data <- sim.fmri(hrf, beta)$fmri
 }
+\value{
+  \item{fmri}{matrix, simulated fmri data.}
+}
 \author{
-  Max Hughes
+  Maximilian Hughes
 }
 

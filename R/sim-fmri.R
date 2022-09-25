@@ -8,7 +8,7 @@
 #' @usage sim.fmri(hrf, beta)
 #' @param hrf haemodynamic response function, needs to be a vector of length \code{T}.
 #' @param beta scalar, defines the height of the activated area, in form of a cylinder. 
-#' @author Max Hughes
+#' @author Maximilian Hughes
 #' @note This function is solely for one covariate.
 #' @examples
 #' # non-transformed hr-function
@@ -23,8 +23,6 @@
 #' data <- sim.fmri(hrf, beta)$fmri                   
 
 sim.fmri <- function(hrf, beta){
-
-  require(Matrix)
 
   if(any(is.na(hrf)))
     stop("\nNAs in hr function.\n")

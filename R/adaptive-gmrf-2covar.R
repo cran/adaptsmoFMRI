@@ -24,21 +24,15 @@
 #' @param block scalar, when \code{approximate==TRUE} then a block of weights is updated at a time.
 #' @param burnin scalar, defining the first iteration steps which should be omitted from MCMC path.
 #' @param thin scalar, only every \code{thin} step of MCMC path is saved to output.
-#' @author Max Hughes
+#' @author Maximilian Hughes
 #' @note This function is solely for two covariates and real data sets.
 #' @examples
 #' # See example function for simulated data (one covariate).       
+#' @import parallel
 
 
 adaptiveGMRF2COVAR <- function(data, hrf, approximate=FALSE, K=500,
                                a=0.001, b=0.001, c=0.001, d=0.001, nu=1, filter=NULL, block=1, burnin=1, thin=1){
-
-  ## load required libraries
-  require("coda")
-  require("mvtnorm")
-  require("MCMCpack")
-  require("Matrix")
-  require("parallel")
 
   #if (any(is.na(data)))
   #      stop("\nNAs in fMRI data.\n")
@@ -508,10 +502,10 @@ adaptiveGMRF2COVAR <- function(data, hrf, approximate=FALSE, K=500,
       }
       return(list("w.Var2"=w.Var2, "tauk.sq2K.Var2"=tauk.sq2K.Var2,
                   "count.Var2"=count.Var2, "acc.count.Var2"=acc.count.Var2))
-    }
-      weights.Var1 <- mcparallel(drawWeights.Var1(K.sparse.Var1, nu, nei, NEI, I, block, count.Var1, beta.Var1, tauk.sq.Var1, tauk.sq2K.Var1, K.i, K.j), name="Var1")
-      weights.Var2 <- mcparallel(drawWeights.Var2(K.sparse.Var2, nu, nei, NEI, I, block, count.Var2, beta.Var2, tauk.sq.Var2, tauk.sq2K.Var2, K.i, K.j), name="Var2")
-      results <- mccollect(list("Var1"=weights.Var1, "Var2"=weights.Var2))
+      }
+      weights.Var1 <- parallel::mcparallel(drawWeights.Var1(K.sparse.Var1, nu, nei, NEI, I, block, count.Var1, beta.Var1, tauk.sq.Var1, tauk.sq2K.Var1, K.i, K.j), name="Var1")
+      weights.Var2 <- parallel::mcparallel(drawWeights.Var2(K.sparse.Var2, nu, nei, NEI, I, block, count.Var2, beta.Var2, tauk.sq.Var2, tauk.sq2K.Var2, K.i, K.j), name="Var2")
+      results <- parallel::mccollect(list("Var1"=weights.Var1, "Var2"=weights.Var2))
       
       w.Var1 <- results$Var1$w.Var1
       tauk.sq2K.Var1 <- results$Var1$tauk.sq2K.Var1
@@ -580,7 +574,7 @@ adaptiveGMRF2COVAR <- function(data, hrf, approximate=FALSE, K=500,
                              dims=c(I,I))
 
 
-    print(c(k, apply(alpha, 2, median), median(beta.Var1), median(beta.Var2), median(w.Var1),
+    message(c(k, apply(alpha, 2, median), median(beta.Var1), median(beta.Var2), median(w.Var1),
             median(w.Var2), median(sigma.sq), median(tauk.sq.Var1), median(tauk.sq.Var2)))
 
     ## start saving MCMC output after burnin

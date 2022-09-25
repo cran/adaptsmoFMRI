@@ -19,7 +19,7 @@
 #' @param block scalar, when \code{approximate==TRUE} then a block of weights is updated at a time.
 #' @param burnin scalar, defining the first iteration steps which should be omitted from MCMC path.
 #' @param thin scalar, only every \code{thin} step of MCMC path is saved to output.
-#' @author Max Hughes
+#' @author Maximilian Hughes
 #' @note This function is solely for one covariate.
 #' @examples  
 #' # non-transformed hr-function
@@ -41,12 +41,6 @@
 
 sim.adaptiveGMRF <- function(data, hrf, approximate=FALSE, K=500, 
                              a=1, b=1, c=1, d=1, nu=1, block=1, burnin=1, thin=1){
-
-  ## load required libraries
-  require("coda")
-  require("mvtnorm")
-  require("MCMCpack")
-  require("Matrix")
   
   if(any(is.na(data)))
     stop("\nNAs in fMRI data.\n")
@@ -311,7 +305,7 @@ sim.adaptiveGMRF <- function(data, hrf, approximate=FALSE, K=500,
     K.sparse <- sparseMatrix(K.i, K.j, x=as.vector(tauk.sq2K%*%(1/tauk.sq)),
                              dims=c(I, I))
     
-    print(c(k, median(beta), median(w), median(sigma.sq), median(tauk.sq)))
+    message(c(k, median(beta), median(w), median(sigma.sq), median(tauk.sq)))
     
     ## start saving MCMC output after burnin
     if(k >= burnin){

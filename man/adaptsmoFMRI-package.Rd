@@ -4,12 +4,11 @@
 \docType{package}
 \title{Adaptive Smoothing of FMRI Data}
 \description{
-This package contains R functions for estimating the blood
-oxygenation level dependent (BOLD) effect by using functional 
-Magnetic Resonance Imaging (fMRI) data, based on 
-adaptive Gauss Markov random fields, for real as well as 
-simulated data. The implemented simulations make use of efficient 
-Markov Chain Monte Carlo methods. 
+    Adaptive smoothing functions for estimating the blood
+    oxygenation level dependent (BOLD) effect by using functional Magnetic
+    Resonance Imaging (fMRI) data, based on adaptive Gauss Markov random
+    fields, for real as well as simulated data. The implemented models make 
+    use of efficient Markov Chain Monte Carlo methods.
 }
 \references{
 A. Brezger, L. Fahrmeir, A. Hennerfeind
@@ -26,12 +25,12 @@ Journal of Statistical Software, \bold{Volume 44}, Issue 6. 2011
 Package: \tab adaptsmoFMRI\cr
 Type: \tab Package\cr
 Version: \tab 1.1\cr
-Date: \tab 2013-01-16\cr
+Date: \tab 2022-08-16\cr
 License: \tab GPL-2\cr
 }
 }
 \author{
-Max Hughes
+Maximilian Hughes
 Maintainer: \email{hughesgm@me.com}
 }
 \keyword{ package }

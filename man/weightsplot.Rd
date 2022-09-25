@@ -32,7 +32,8 @@
 \note{
   This function is solely for MCMC-outputs on real data.
 }
+\value{No return value, called for side effects}
 \author{
-  Max Hughes
+  Maximilian Hughes
 }
 

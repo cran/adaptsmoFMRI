@@ -9,7 +9,7 @@
 #' @param hrf haemodynamic response function, needs to be a vector of length \code{T}.
 #' @param beta.Var1 scalar, defines the height of the activated area, in form of a cylinder of the first grid. 
 #' @param beta.Var2 scalar, defines the height of the activated area, in form of a cylinder of the second grid. 
-#' @author Max Hughes
+#' @author Maximilian Hughes
 #' @note This function is solely for two covariates.
 #' @examples
 #' # non-transformed hr-function
@@ -28,8 +28,6 @@
 
 
 sim.fmri2COVAR <- function(hrf, beta.Var1, beta.Var2){
-
-  require(Matrix)
 
   if(any(is.na(hrf)))
     stop("\nNAs in hr function.\n")

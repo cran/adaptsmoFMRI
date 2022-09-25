@@ -15,14 +15,12 @@
 #'                this threshold should be plotted.
 #' @param \dots, graphical parameters for \code{image} can also be passed on as arguments to 
 #'               this function.
-#' @author Max Hughes
+#' @author Maximilian Hughes
 #' @note This function is solely for MCMC-outputs on real data.
+#' @import spatstat.geom
 
 
-weightsplot <- function(weights, nei, nx, ny, coord, thresh=0.1, ...) { 
-  
-  require(spatstat)
-  require(Matrix)
+weightsplot <- function(weights, nei, nx, ny, coord, thresh=0.1, ...) {
 
   if(is.matrix(weights)!=TRUE)
     stop("weights needs to be a matrix!")
@@ -57,7 +55,7 @@ weightsplot <- function(weights, nei, nx, ny, coord, thresh=0.1, ...) {
   ncolim <- 2*ncol - 1
 
   Z <- matrix(nrow=nrowim, ncol=ncolim)
-  Zim <- im(Z, xcol=1:ncolim, yrow=1:nrowim)
+  Zim <- spatstat.geom::im(Z, xcol=1:ncolim, yrow=1:nrowim)
 
   inds <- rep(seq(1,ncolim,by=2), times=nrow) + rep((0:(nrow-1))*(2*ncolim), each=ncol)
 
@@ -78,7 +76,7 @@ weightsplot <- function(weights, nei, nx, ny, coord, thresh=0.1, ...) {
 
   Zmask <- as.matrix(Zmask)
 
-  maskZim <- im(Zmask, xcol=1:ncolim, yrow=1:nrowim)
+  maskZim <- spatstat.geom::im(Zmask, xcol=1:ncolim, yrow=1:nrowim)
 
   coorweights <- sapply(as.data.frame(nei), function(x) colMeans(getcoor(maskZim, maskZim$v %in% x)))
   coorweights <- coorweights[,w<thresh]

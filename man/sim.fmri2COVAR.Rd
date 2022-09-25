@@ -40,7 +40,10 @@ beta.Var1 <- beta.Var2 <- 3
 # use function to obtain fmri data
 data <- sim.fmri2COVAR(hrf, beta.Var1, beta.Var2)$fmri
 }
+\value{
+  \item{fmri}{matrix, simulated fmri data.}
+}
 \author{
-  Max Hughes
+  Maximilian Hughes
 }
 

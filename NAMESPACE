@@ -8,5 +8,9 @@ import(
     mvtnorm,
     MCMCpack,
     spatstat,
+    spatstat.geom,
     parallel
 )
+
+importFrom("methods", "as")
+importFrom("stats", "median", "rgamma", "rnorm", "runif")

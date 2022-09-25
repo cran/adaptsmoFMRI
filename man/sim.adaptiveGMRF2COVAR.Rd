@@ -62,7 +62,20 @@
 \examples{
 # See example function for simulated data (one covariate).
 }
+\value{
+  \item{dx}{scalar, number of pixels in x-direction.}
+  \item{dy}{scalar, number of pixels in y-direction.}
+  \item{I}{scalar, number of pixels.}
+  \item{iter}{scalar, number of MCMC iterations.}
+  \item{coord}{matrix, coordinates of pixels.}
+  \item{nei}{matrix, locations of weights in precision matrix.}
+  \item{NEI}{scalar, number of weights.}
+  \item{beta.out}{matrix, MCMC path of covariates.}
+  \item{w.out}{matrix, MCMC path of weights.}
+  \item{sigma.out}{matrix, MCMC path of variance parameters.}
+  \item{tauk.out}{matrix, MCMC path of hyper parameters.}
+}
 \author{
-  Max Hughes
+  Maximilian Hughes
 }
 
